@@ -18,10 +18,9 @@ services:
     volumes:
       - ./api:/app
     environment:
-      - MONGO_USER=mongo_user
-      - MONGO_PASSWORD=mongo_password
-      - MONGO_HOST=mongo
+      - MONGO_URL=mongodb://mongo_user:mongo_password@mongo
       - MONGO_DB=pokemon-db
+      - SIGNING_KEY=${SIGNING_KEY}
   ghi:
     image: node:lts-bullseye
     command: /bin/bash run.sh
