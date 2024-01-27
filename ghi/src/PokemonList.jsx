@@ -1,91 +1,28 @@
 import PokemonCard from './PokemonCard';
+import { useSelector } from 'react-redux';
+import { useGetAllPokemonQuery } from './app/apiSlice';
 
 const PokemonList = () => {
-    const data = [
-        {
-            name: "bulbasaur",
-            url: "https://pokeapi.co/api/v2/pokemon/1/"
-        },
-        {
-            name: "ivysaur",
-            url: "https://pokeapi.co/api/v2/pokemon/2/"
-        },
-        {
-            name: "venusaur",
-            url: "https://pokeapi.co/api/v2/pokemon/3/"
-        },
-        {
-            name: "charmander",
-            url: "https://pokeapi.co/api/v2/pokemon/4/"
-        },
-        {
-            name: "charmeleon",
-            url: "https://pokeapi.co/api/v2/pokemon/5/"
-        },
-        {
-            name: "charizard",
-            url: "https://pokeapi.co/api/v2/pokemon/6/"
-        },
-        {
-            name: "squirtle",
-            url: "https://pokeapi.co/api/v2/pokemon/7/"
-        },
-        {
-            name: "wartortle",
-            url: "https://pokeapi.co/api/v2/pokemon/8/"
-        },
-        {
-            name: "blastoise",
-            url: "https://pokeapi.co/api/v2/pokemon/9/"
-        },
-        {
-            name: "caterpie",
-            url: "https://pokeapi.co/api/v2/pokemon/10/"
-        },
-        {
-            name: "metapod",
-            url: "https://pokeapi.co/api/v2/pokemon/11/"
-        },
-        {
-            name: "butterfree",
-            url: "https://pokeapi.co/api/v2/pokemon/12/"
-        },
-        {
-            name: "weedle",
-            url: "https://pokeapi.co/api/v2/pokemon/13/"
-        },
-        {
-            name: "kakuna",
-            url: "https://pokeapi.co/api/v2/pokemon/14/"
-        },
-        {
-            name: "beedrill",
-            url: "https://pokeapi.co/api/v2/pokemon/15/"
-        },
-        {
-            name: "pidgey",
-            url: "https://pokeapi.co/api/v2/pokemon/16/"
-        },
-        {
-            name: "pidgeotto",
-            url: "https://pokeapi.co/api/v2/pokemon/17/"
-        },
-        {
-            name: "pidgeot",
-            url: "https://pokeapi.co/api/v2/pokemon/18/"
-        },
-        {
-            name: "rattata",
-            url: "https://pokeapi.co/api/v2/pokemon/19/"
-        },
-        {
-            name: "raticate",
-            url: "https://pokeapi.co/api/v2/pokemon/20/"
+    const searchCriteria = useSelector((state) => state.search.value)
+    const { data, isLoading } = useGetAllPokemonQuery()
+
+    const filteredPokemon = () => {
+        if (searchCriteria) {
+            return data.filter(poke => poke.name.includes(searchCriteria))
+        } else {
+            return data;
         }
-    ]
+    }
+    if (isLoading) return <div>Loading...</div>
     return (
-        <div className="row mt-3">
-            {data.map(p => <PokemonCard key={p.name} name={p.name} />)}
+        <div className='mt-3'>
+            <h1>
+                Pokemon List{' '}
+                <small className='text-body-secondary'>{searchCriteria}</small>
+            </h1>
+            <div className="row mt-3">
+                {filteredPokemon().map(p => <PokemonCard key={p.name} name={p.name} />)}
+            </div>
         </div>
     )
 }

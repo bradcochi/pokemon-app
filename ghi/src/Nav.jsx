@@ -1,5 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
+import { useGetAccountQuery, useLogoutMutation } from "./app/apiSlice";
+
 const Nav = () => {
+    const { data: account } = useGetAccountQuery();
+    const [logout] = useLogoutMutation();
+
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
@@ -12,17 +17,21 @@ const Nav = () => {
                         <li className="nav-item">
                             <NavLink to={'/'} className={'nav-link'}>Home</NavLink>
                         </li>
-                        <li className="nav-item">
+                        {account && <li className="nav-item">
                             <NavLink to={'/favorites'} className={'nav-link'}>Favorites</NavLink>
-                        </li>
-                        <li className="nav-item">
+                        </li>}
+                        {!account && <li className="nav-item">
                             <NavLink to={'/login'} className={'nav-link'}>Login</NavLink>
-                        </li>
-                        <li className="nav-item">
+                        </li>}
+                        {!account && <li className="nav-item">
                             <NavLink to={'/signup'} className={'nav-link'}>Sign Up</NavLink>
-                        </li>
+                        </li>}
                     </ul>
-                    <button className="btn btn-outline-danger">Logout</button>
+                    {account && (
+                        <button className="btn btn-outline-danger" onClick={logout}>
+                            Logout
+                        </button>
+                    )}
                 </div>
             </div>
         </nav>

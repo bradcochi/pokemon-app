@@ -1,32 +1,14 @@
+import { useParams, Link } from "react-router-dom";
+import { useGetPokemonByNameQuery, useGetAccountQuery } from "./app/apiSlice";
+import FavoriteButtons from "./FavoriteButtons";
+
 const PokemonDetails = () => {
-    const data = {
-        abilities: [
-            {
-                ability: {
-                    name: "static",
-                    url: "https://pokeapi.co/api/v2/ability/9/"
-                },
-                is_hidden: false,
-                slot: 1
-            },
-            {
-                ability: {
-                    name: "lightning-rod",
-                    url: "https://pokeapi.co/api/v2/ability/31/"
-                },
-                is_hidden: true,
-                slot: 3
-            }
-        ],
-        base_experience: 112,
-        height: 4,
-        id: 25,
-        is_default: true,
-        location_area_encounters: "https://pokeapi.co/api/v2/pokemon/25/encounters",
-        name: "pikachu",
-        order: 35,
-        weight: 60
-    }
+    const { name } = useParams()
+    const { data: account } = useGetAccountQuery()
+    const { data, isLoading } = useGetPokemonByNameQuery(name);
+
+    if (isLoading) return <div>Loading...</div>
+
     return (
         <div>
             <div className="row">
@@ -34,18 +16,12 @@ const PokemonDetails = () => {
                     <h1>{data.name.toUpperCase()}</h1>
                 </div>
                 <div className="col-4 text-end">
-                    <button
-                        className="btn btn-success"
-                        onClick={() => console.log('favorite')}
-                    >
-                        Favorite
-                    </button>
-                    <button
-                        className="btn btn-danger"
-                        onClick={() => console.log('unfavorite')}
-                    >
-                        Unfavorite
-                    </button>
+                    {
+                        account ?
+                            <FavoriteButtons name={data.name} />
+                        :
+                            <Link to={`/login?redirect=/pokemon/${name}`} className="btn btn-outline-primary">Login</Link>
+                    }
                 </div>
             </div>
             <ul className="list-group">
